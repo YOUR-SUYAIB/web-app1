@@ -13,36 +13,40 @@
   <img id="profile_pic" alt="Profile Picture" style="width:100px; height:100px; border-radius:50%;" />
 
   <script>
-    // Function to parse Telegram WebApp data and display it
     function loadTelegramUserData() {
       try {
-        // Get the URL parameters after the hash (#) symbol
-        const urlParams = new URLSearchParams(window.location.hash.slice(1));
-        
-        // Extract and decode tgWebAppData parameter
-        const tgData = urlParams.get('tgWebAppData');
-        if (!tgData) throw new Error("Telegram WebApp data not found.");
+        // Extract tgWebAppData from URL fragment
+        const urlFragment = window.location.hash.substring(1); // Remove the leading '#'
+        const params = new URLSearchParams(urlFragment);
 
-        // Parse JSON data
-        const userData = JSON.parse(decodeURIComponent(tgData)).user;
+        // Get tgWebAppData and parse it
+        const tgDataEncoded = params.get('tgWebAppData');
+        if (!tgDataEncoded) {
+          throw new Error("Telegram WebApp data not found.");
+        }
 
-        // Display the user data in the DOM
-        document.getElementById('name').innerText = userData.first_name || "N/A";
-        document.getElementById('username').innerText = userData.username || "N/A";
-        document.getElementById('chat_id').innerText = userData.id || "N/A";
-        
-        // Display the profile picture if available
-        if (userData.photo_url) {
-          document.getElementById('profile_pic').src = userData.photo_url;
+        // Decode URI and parse JSON data
+        const tgData = JSON.parse(decodeURIComponent(tgDataEncoded));
+
+        // Extract user data and set to HTML
+        const user = tgData.user;
+        document.getElementById('name').innerText = user.first_name || "N/A";
+        document.getElementById('username').innerText = user.username || "N/A";
+        document.getElementById('chat_id').innerText = user.id || "N/A";
+
+        // Display profile picture if available
+        if (user.photo_url) {
+          document.getElementById('profile_pic').src = user.photo_url;
         } else {
           document.getElementById('profile_pic').alt = "No Profile Picture Available";
         }
+
       } catch (error) {
         console.error("Error loading Telegram WebApp data:", error);
       }
     }
 
-    // Run the function on page load
+    // Call the function after page load
     window.onload = loadTelegramUserData;
   </script>
 </body>
