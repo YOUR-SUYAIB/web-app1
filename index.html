@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Telegram Web App</title>
+</head>
+<body>
+  <h1>Telegram User Info</h1>
+  <p><strong>Name:</strong> <span id="name">Loading...</span></p>
+  <p><strong>Username:</strong> <span id="username">Loading...</span></p>
+  <p><strong>Chat ID:</strong> <span id="chat_id">Loading...</span></p>
+  <img id="profile_pic" alt="Profile Picture" style="width:100px; height:100px; border-radius:50%;" />
+
+  <script>
+    // Function to parse Telegram WebApp data and display it
+    function loadTelegramUserData() {
+      try {
+        // Get the URL parameters after the hash (#) symbol
+        const urlParams = new URLSearchParams(window.location.hash.slice(1));
+        
+        // Extract and decode tgWebAppData parameter
+        const tgData = urlParams.get('tgWebAppData');
+        if (!tgData) throw new Error("Telegram WebApp data not found.");
+
+        // Parse JSON data
+        const userData = JSON.parse(decodeURIComponent(tgData)).user;
+
+        // Display the user data in the DOM
+        document.getElementById('name').innerText = userData.first_name || "N/A";
+        document.getElementById('username').innerText = userData.username || "N/A";
+        document.getElementById('chat_id').innerText = userData.id || "N/A";
+        
+        // Display the profile picture if available
+        if (userData.photo_url) {
+          document.getElementById('profile_pic').src = userData.photo_url;
+        } else {
+          document.getElementById('profile_pic').alt = "No Profile Picture Available";
+        }
+      } catch (error) {
+        console.error("Error loading Telegram WebApp data:", error);
+      }
+    }
+
+    // Run the function on page load
+    window.onload = loadTelegramUserData;
+  </script>
+</body>
+</html>
