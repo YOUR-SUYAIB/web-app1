@@ -2,7 +2,7 @@
 
 // Function to call the API
 function callAPI($link, $quantity) {
-    $apiKey = "f54c2517a0c675eee553a884237d1b6";
+    $apiKey = "9f54c2517a0c675eee553a884237d1b6";
     $service = "1840";
     $url = "https://smmpanel.com/api/v2";
 
